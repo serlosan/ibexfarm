@@ -6,4 +6,7 @@ author: |
 date: "July 17, 2019"
 ---
 
-When we access IbexFarm for the first time, we need to create a new experiment.
+When we access IbexFarm for the first time, we need to create a new experiment and come up with a name for it. Note that the name we choose is the name participants will see in the URL, so choose a name that does not give away too much information.
+
+![Create a new experiment.](img/setup01.png)
+
