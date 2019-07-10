@@ -7,4 +7,6 @@ navbar:
       href: index.html
     - text: "Cleaning data"
       href: cleaning.html
-  theme: cosmo
+output:
+  html_document:
+    theme: cosmo
