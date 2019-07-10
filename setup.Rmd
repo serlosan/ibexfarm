@@ -10,3 +10,13 @@ When we access IbexFarm for the first time, we need to create a new experiment a
 
 ![](img/setup01.png)
 
+Within our experiment, there are many files grouped in different sections:
+
+* **chunk_includes**: Includes the HTML file participants see when they open the experiment's link. Here we also include some questions to gather data from our participants (age, native language, etc.).
+* **css_includes**: 
+* **data_includes**: Includes the file containing the experimental sentences.
+* **js_includes**: 
+* **results**: When results are sent to the server, two files will appear here: "raw_results" and "results".
+* **server_state**: Counter.
+
+The files we must modify are included in **chunk_includes** (example_intro.html) and **data_includes** (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, ñ, or initial question marks (¿) will not be displayed. Please install [Sublime Text 3](https://www.sublimetext.com/3).

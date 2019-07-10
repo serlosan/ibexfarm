@@ -315,6 +315,16 @@ $(document).ready(function () {
 
 <p>When we access IbexFarm for the first time, we need to create a new experiment and come up with a name for it. Note that the name we choose is the name participants will see in the URL, so choose a name that does not give away too much information.</p>
 <p><img src="img/setup01.png" /></p>
+<p>Within our experiment, there are many files grouped in different sections:</p>
+<ul>
+<li><strong>chunk_includes</strong>: Includes the HTML file participants see when they open the experiment’s link. Here we also include some questions to gather data from our participants (age, native language, etc.).</li>
+<li><strong>css_includes</strong>:</li>
+<li><strong>data_includes</strong>: Includes the file containing the experimental sentences.</li>
+<li><strong>js_includes</strong>:</li>
+<li><strong>results</strong>: When results are sent to the server, two files will appear here: “raw_results” and “results”.</li>
+<li><strong>server_state</strong>: Counter.</li>
+</ul>
+<p>The files we must modify are included in <strong>chunk_includes</strong> (example_intro.html) and <strong>data_includes</strong> (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, ñ, or initial question marks (¿) will not be displayed. Please install <a href="https://www.sublimetext.com/3">Sublime Text 3</a>.</p>
 
 
 
