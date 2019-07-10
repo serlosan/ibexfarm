@@ -1,5 +1,9 @@
 ---
 title: "Setting up your experiment"
+author: | 
+  | Sergio López-Sancio
+  | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
+date: "July 17, 2019"
 ---
 
-When we enter IbexFarm for the first time, we need to create a new experiment.
+When we access IbexFarm for the first time, we need to create a new experiment.
