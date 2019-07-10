@@ -3,3 +3,5 @@ title: "IbexFarm Tutorial"
 ---
 
 This is a little tutorial on how to set up your own acceptability judgment task using IbexFarm and how to clean your results in R in order to analyze them.
+
+For this tutorial, we will use the results from an AJT I conducted as a norming study. You can download the data <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/results.txt" target="_blank">here</a>. There are 24 experimental items in a 2x2 design, crossing "dependency" (wh vs. local) and "length" (short vs. long).
