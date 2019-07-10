@@ -38,4 +38,33 @@ Open Sublime Text 3.0 and open a new file (File > New File). Name it "example_in
 
 In HTML, paragraphs are inserted between `<p> </p>`. For instance:
 
-`<p>Thank you for taking part in our experiment!</p>`
+```
+<p>Thank you for taking part in our experiment!</p>
+```
+
+In principle, we can ask two types of questions: open questions or multiple choice questions. Imagine we want to know how old our participants are. We would need the following code:
+
+```
+<p>How old are you?</p>
+
+<input name="age" type="text" class="obligatory" size="2"/>
+```
+
+The result will be:
+
+![](img/setup03.png){ width=17% }
+
+Now imagine we want to know whether our participant is a native speaker of English.
+
+```
+<p>Are you a native speaker of English?</p>
+
+Yes
+<input name="native" type="radio" class="obligatory" value="Yes"/>
+No
+<input name="native" type="radio" class="obligatory" value="No"/>
+```
+
+The result will be:
+
+![](img/setup04.png){ width=30% }

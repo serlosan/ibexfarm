@@ -338,7 +338,22 @@ $(document).ready(function () {
 <p>Open Sublime Text 3.0 and open a new file (File &gt; New File). Name it “example_intro.html” and save it in your computer.</p>
 <p><img src="img/setup02.png" /></p>
 <p>In HTML, paragraphs are inserted between <code>&lt;p&gt; &lt;/p&gt;</code>. For instance:</p>
-<p><code>&lt;p&gt;Thank you for taking part in our experiment!&lt;/p&gt;</code></p>
+<pre><code>&lt;p&gt;Thank you for taking part in our experiment!&lt;/p&gt;</code></pre>
+<p>In principle, we can ask two types of questions: open questions or multiple choice questions. Imagine we want to know how old our participants are. We would need the following code:</p>
+<pre><code>&lt;p&gt;How old are you?&lt;/p&gt;
+
+&lt;input name=&quot;age&quot; type=&quot;text&quot; class=&quot;obligatory&quot; size=&quot;2&quot;/&gt;</code></pre>
+<p>The result will be:</p>
+<p><img src="img/setup03.png" style="width:17.0%" /></p>
+<p>Now imagine we want to know whether our participant is a native speaker of English.</p>
+<pre><code>&lt;p&gt;Are you a native speaker of English?&lt;/p&gt;
+
+Yes
+&lt;input name=&quot;native&quot; type=&quot;radio&quot; class=&quot;obligatory&quot; value=&quot;Yes&quot;/&gt;
+No
+&lt;input name=&quot;native&quot; type=&quot;radio&quot; class=&quot;obligatory&quot; value=&quot;No&quot;/&gt;</code></pre>
+<p>The result will be:</p>
+<p><img src="img/setup04.png" style="width:30.0%" /></p>
 </div>
 
 
