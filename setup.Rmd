@@ -1,0 +1,5 @@
+---
+title: "Setting up your experiment"
+---
+
+When we enter IbexFarm for the first time, we need to create a new experiment.
