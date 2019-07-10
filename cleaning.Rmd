@@ -3,7 +3,7 @@ title: "Cleaning IbexFarm output with R"
 author: | 
   | Sergio López-Sancio
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
-date: "July 16, 2019"
+date: "July 18, 2019"
 ---
 
 # 1. Before we start
