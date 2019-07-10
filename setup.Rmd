@@ -19,4 +19,4 @@ Within our experiment, there are many files grouped in different sections:
 * **results**: When results are sent to the server, two files will appear here: "raw_results" and "results".
 * **server_state**: Counter.
 
-The files we must modify are included in **chunk_includes** (example_intro.html) and **data_includes** (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, ñ, or initial question marks (¿) will not be displayed. Please install [Sublime Text 3](https://www.sublimetext.com/3).
+The files we must modify are included in **chunk_includes** (example_intro.html) and **data_includes** (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, *ñ*, or initial question marks (*¿*) will not be displayed. Please install [Sublime Text 3](https://www.sublimetext.com/3).
