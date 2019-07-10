@@ -20,3 +20,22 @@ Within our experiment, there are many files grouped in different sections:
 * **server_state**: Counter.
 
 The files we must modify are included in **chunk_includes** (example_intro.html) and **data_includes** (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, *ñ*, or initial question marks (*¿*) will not be displayed. Please install [Sublime Text 3](https://www.sublimetext.com/3).
+
+## Intro file (example_intro.html)
+
+The intro file is the first thing participants see when they access the experiment. We should include:
+
+* A welcome message.
+* Instructions (with an example).
+* Questions to gather information about participants.
+* Thank you message.
+
+The intro file is an HTML file, so basic HTML coding is required. If you have never coded in HTML before, don't panic -you'll only need very basic commands and Google is always willing to help.
+
+Open Sublime Text 3.0 and open a new file (File > New File). Name it "example_intro.html" and save it in your computer.
+
+![](img/setup02.png)
+
+In HTML, paragraphs are inserted between `<p> </p>`. For instance:
+
+`<p>Thank you for taking part in our experiment!</p>`

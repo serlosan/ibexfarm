@@ -324,7 +324,22 @@ $(document).ready(function () {
 <li><strong>results</strong>: When results are sent to the server, two files will appear here: “raw_results” and “results”.</li>
 <li><strong>server_state</strong>: Counter.</li>
 </ul>
-<p>The files we must modify are included in <strong>chunk_includes</strong> (example_intro.html) and <strong>data_includes</strong> (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, ñ, or initial question marks (¿) will not be displayed. Please install <a href="https://www.sublimetext.com/3">Sublime Text 3</a>.</p>
+<p>The files we must modify are included in <strong>chunk_includes</strong> (example_intro.html) and <strong>data_includes</strong> (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, <em>ñ</em>, or initial question marks (<em>¿</em>) will not be displayed. Please install <a href="https://www.sublimetext.com/3">Sublime Text 3</a>.</p>
+<div id="intro-file-example_intro.html" class="section level2">
+<h2>Intro file (example_intro.html)</h2>
+<p>The intro file is the first thing participants see when they access the experiment. We should include:</p>
+<ul>
+<li>A welcome message.</li>
+<li>Instructions (with an example).</li>
+<li>Questions to gather information about participants.</li>
+<li>Thank you message.</li>
+</ul>
+<p>The intro file is an HTML file, so basic HTML coding is required. If you have never coded in HTML before, don’t panic -you’ll only need very basic commands and Google is always willing to help.</p>
+<p>Open Sublime Text 3.0 and open a new file (File &gt; New File). Name it “example_intro.html” and save it in your computer.</p>
+<p><img src="img/setup02.png" /></p>
+<p>In HTML, paragraphs are inserted between <code>&lt;p&gt; &lt;/p&gt;</code>. For instance:</p>
+<p><code>&lt;p&gt;Thank you for taking part in our experiment!&lt;/p&gt;</code></p>
+</div>
 
 
 
