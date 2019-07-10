@@ -1,0 +1,180 @@
+---
+title: "Cleaning IbexFarm output with R"
+author: | 
+  | Sergio López-Sancio
+  | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
+date: "July 16, 2019"
+---
+
+# 1. Before we start
+
+We need to load the following packages. If you don't have them installed in your computer, you can do so using the `install.packages()` function.
+
+```{r, message=FALSE}
+library(languageR)
+library(gdata)
+library(MASS)
+library(plyr)
+library(lme4)
+library(car)
+```
+
+Next, we will load our data. In the `read.table()`function, we must specify that:
+
+* there are no headers (`head=FALSE`),
+* columns are separated by commas (`sep=","`), and
+* additional cells will be added to our data frame if there is an uneven number of columns by row (`fill=TRUE`). If we don't do this, R won't be able to read our file.
+
+```{r}
+dat <- read.table("data/results.txt", head=FALSE, sep=",", fill=TRUE)
+write.csv(dat,"data/results.csv", row.names=FALSE)
+```
+
+Write now, our columns don't have names.
+
+```{r}
+colnames(dat)
+```
+
+We can rename these columns so that we can work with out data frame more intuitively:
+
+```{r}
+colnames(dat) <- c("subj_ID", "MD5", "controller", "item_abs", "element", "type", "item",
+                   "sentence", "rating")
+colnames(dat)
+```
+
+We also need to get rid of all rows containing `NAs`:
+
+```{r}
+dat <- na.omit(dat)
+```
+
+In our intro HTML document, we may have added some questionnaires to gather information about our participants (age, gender, native language, etc.). We need to have that information in columns in our data frame. However, IbexFarm provides that information at the beginning of each participant. We can easily extract the information into a vector and paste it in our data frame. Instead of doing this individually for each item in our questionnaire, we can create a function to do so more automatically. I've named it `addcolumn`.
+
+```{r}
+addcolumn <- function(fieldname) {
+  repnumber<-count(dat, vars="subj_ID")[2,2]
+  x <- droplevels(subset(dat, dat$sentence == fieldname))
+  x <- x$rating
+  y <- rep(x,each=repnumber)
+  return(y)
+}
+```
+
+Now we can add the new columns with the information from the questionnaire:
+
+```{r}
+dat$age <- as.numeric(paste(addcolumn("age")))
+dat$sex <- as.factor(paste(addcolumn("sex")))
+dat$spain <- as.factor(paste(addcolumn("Spain")))
+dat$spanish <- as.factor(paste(addcolumn("Spanish")))
+dat$consent <- as.factor(paste(addcolumn("consent")))
+```
+
+If we have a look at the structure of the new data frame, we'll see that the new variables have been added:
+
+```{r}
+str(dat)
+```
+
+When creating the HTML file, I coded some of the answers in Spanish:
+
+```{r}
+levels(dat$spain)
+levels(dat$spanish)
+```
+
+This is not a problem for us. However, I'm gonna translate them into English in case we want to share our data:
+
+```{r}
+dat$spain <- as.factor(ifelse(dat$spain=="Si","yes","no"))
+dat$spanish <- as.factor(ifelse(dat$spanish=="Si","yes","no"))
+
+levels(dat$spain)
+levels(dat$spanish)
+```
+
+We can know delete the rows we are not interested in. We are goin to delete the rows containing:
+
+* the participants' information (age, gender, etc.) because we already have coded that information in columns.
+* the ratings of the practice items because they are uninformative.
+* the second row of each response. IbexFarm provides two rows of information per response, but we are only interested in the one containing the rating.
+
+```{r}
+dat <- droplevels(subset(dat, type != "intro" & type != "practice" &
+                           sentence == "NULL"))
+```
+
+We are going to add a new column naming our participants (S~1~, S~2~ ... S~n~):
+
+```{r}
+subj <- length(levels(as.factor(dat$subj_ID)))
+resp <- count(dat$subj_ID)[1,2]
+
+dat$subject <- as.factor(paste("S", rep(1:subj, each=resp), sep=""))
+```
+
+As a sanity check, we can make sure each subject has only one response per item.If we have more than one response per item or non, we should try to find out why.
+
+```{r}
+xtabs(~ subject + item, dat)
+```
+
+If we have a look at our data frame using the `head` function, there is a variable called "type" in which we have the conditions specified: filler_gram, filler_ungram, wh_long, wh_short, local_long, local_short.
+
+```{r}
+head(dat)
+```
+
+
+We need to code this information into three new columns. First, we are going to add a column specifying whether a particular item is a filler or an experimental sentence. This way, we can subset our data frame and analyze either filler or experimental items.
+
+```{r}
+dat$exp <- as.factor(ifelse(dat$type=="filler_gram", "filler",
+                     ifelse(dat$type=="filler_ungram", "filler",
+                            "exp")))
+```
+
+Then, we are going to add two columns to code our two factors: "dependency" (wh vs. local) and "length" (short vs. long):
+
+```{r}
+dat$dependency <- as.factor(ifelse(dat$type=="wh_short", "wh",
+                            ifelse(dat$type=="wh_long", "wh",
+                            ifelse(dat$type=="local_short","local",
+                            ifelse(dat$type=="local_long","local",
+                            NA)))))
+
+dat$length <- as.factor(ifelse(dat$type=="wh_short", "short",
+                            ifelse(dat$type=="wh_long", "long",
+                            ifelse(dat$type=="local_short","short",
+                            ifelse(dat$type=="local_long","long",
+                            NA)))))
+```
+
+```{r}
+dat$trial <- as.factor(seq(1,resp))
+```
+
+# Calculate z-scores by subject and store the results in a new column
+
+```{r}
+dat$z.score.rating <- ave(as.numeric(dat$rating), dat$subject, FUN=scale)
+
+dat$rating <- as.numeric(dat$rating)
+hist(as.numeric(dat$rating))
+hist(dat$z.score.rating)
+dat_exp <- droplevels(subset(dat, exp == "exp"))
+hist(as.numeric(dat_exp$rating))
+hist(dat_exp$z.score.rating)
+
+model1 <- lmer(rating ~ dependency + length + (1|subject) + (1|item), data=dat)
+model2 <- lmer(z.score.rating ~ dependency + length + (1|subject) + (1|item), data=dat)
+
+qqPlot(residuals(model1))
+qqPlot(residuals(model2))
+
+
+
+```
+

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="date" content="2019-07-16" />
+
+<title>Cleaning IbexFarm output with R</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">IbexFarm Tutorial</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="cleaning.html">Cleaning data</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Cleaning IbexFarm output with R</h1>
+<h4 class="author"><div class="line-block">Sergio López-Sancio<br />
+<a href="mailto:sergiolopezsancio@gmail.com">sergiolopezsancio@gmail.com</a></div></h4>
+<h4 class="date">July 16, 2019</h4>
+
+</div>
+
+
+<div id="before-we-start" class="section level1">
+<h1>1. Before we start</h1>
+<p>We need to load the following packages. If you don’t have them installed in your computer, you can do so using the <code>install.packages()</code> function.</p>
+<pre class="r"><code>library(languageR)
+library(gdata)
+library(MASS)
+library(plyr)
+library(lme4)
+library(car)</code></pre>
+<p>Next, we will load our data. In the <code>read.table()</code>function, we must specify that:</p>
+<ul>
+<li>there are no headers (<code>head=FALSE</code>),</li>
+<li>columns are separated by commas (<code>sep=&quot;,&quot;</code>), and</li>
+<li>additional cells will be added to our data frame if there is an uneven number of columns by row (<code>fill=TRUE</code>). If we don’t do this, R won’t be able to read our file.</li>
+</ul>
+<pre class="r"><code>dat &lt;- read.table(&quot;data/results.txt&quot;, head=FALSE, sep=&quot;,&quot;, fill=TRUE)
+write.csv(dat,&quot;data/results.csv&quot;, row.names=FALSE)</code></pre>
+<p>Write now, our columns don’t have names.</p>
+<pre class="r"><code>colnames(dat)</code></pre>
+<pre><code>## [1] &quot;V1&quot; &quot;V2&quot; &quot;V3&quot; &quot;V4&quot; &quot;V5&quot; &quot;V6&quot; &quot;V7&quot; &quot;V8&quot; &quot;V9&quot;</code></pre>
+<p>We can rename these columns so that we can work with out data frame more intuitively:</p>
+<pre class="r"><code>colnames(dat) &lt;- c(&quot;subj_ID&quot;, &quot;MD5&quot;, &quot;controller&quot;, &quot;item_abs&quot;, &quot;element&quot;, &quot;type&quot;, &quot;item&quot;,
+                   &quot;sentence&quot;, &quot;rating&quot;)
+colnames(dat)</code></pre>
+<pre><code>## [1] &quot;subj_ID&quot;    &quot;MD5&quot;        &quot;controller&quot; &quot;item_abs&quot;   &quot;element&quot;   
+## [6] &quot;type&quot;       &quot;item&quot;       &quot;sentence&quot;   &quot;rating&quot;</code></pre>
+<p>We also need to get rid of all rows containing <code>NAs</code>:</p>
+<pre class="r"><code>dat &lt;- na.omit(dat)</code></pre>
+<p>In our intro HTML document, we may have added some questionnaires to gather information about our participants (age, gender, native language, etc.). We need to have that information in columns in our data frame. However, IbexFarm provides that information at the beginning of each participant. We can easily extract the information into a vector and paste it in our data frame. Instead of doing this individually for each item in our questionnaire, we can create a function to do so more automatically. I’ve named it <code>addcolumn</code>.</p>
+<pre class="r"><code>addcolumn &lt;- function(fieldname) {
+  repnumber&lt;-count(dat, vars=&quot;subj_ID&quot;)[2,2]
+  x &lt;- droplevels(subset(dat, dat$sentence == fieldname))
+  x &lt;- x$rating
+  y &lt;- rep(x,each=repnumber)
+  return(y)
+}</code></pre>
+<p>Now we can add the new columns with the information from the questionnaire:</p>
+<pre class="r"><code>dat$age &lt;- as.numeric(paste(addcolumn(&quot;age&quot;)))
+dat$sex &lt;- as.factor(paste(addcolumn(&quot;sex&quot;)))
+dat$spain &lt;- as.factor(paste(addcolumn(&quot;Spain&quot;)))
+dat$spanish &lt;- as.factor(paste(addcolumn(&quot;Spanish&quot;)))
+dat$consent &lt;- as.factor(paste(addcolumn(&quot;consent&quot;)))</code></pre>
+<p>If we have a look at the structure of the new data frame, we’ll see that the new variables have been added:</p>
+<pre class="r"><code>str(dat)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    8151 obs. of  14 variables:
+##  $ subj_ID   : Factor w/ 40 levels &quot;1550858942&quot;,&quot;1550859288&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ MD5       : Factor w/ 3473 levels &quot;10004&quot;,&quot;10010&quot;,..: 3008 3008 3008 3008 3008 3008 3008 3008 3008 3008 ...
+##  $ controller: Factor w/ 3 levels &quot;&quot;,&quot;AcceptabilityJudgment&quot;,..: 3 3 3 3 3 2 2 2 2 2 ...
+##  $ item_abs  : int  0 0 0 0 0 5 5 2 2 4 ...
+##  $ element   : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ type      : Factor w/ 9 levels &quot;&quot;,&quot;filler_gram&quot;,..: 4 4 4 4 4 7 7 7 7 7 ...
+##  $ item      : Factor w/ 26 levels &quot;&quot;,&quot;1&quot;,&quot;10&quot;,&quot;11&quot;,..: 26 26 26 26 26 26 26 26 26 26 ...
+##  $ sentence  : Factor w/ 187 levels &quot;&quot;,&quot;¿A cuál de los camareros que trabajan en la cervecería han visto borracho por la calle Dato?&quot;,..: 146 154 182 183 179 184 175 87 175 85 ...
+##  $ rating    : Factor w/ 34 levels &quot;&quot;,&quot;1&quot;,&quot;19&quot;,&quot;2&quot;,..: 10 34 33 33 30 1 27 1 2 1 ...
+##  $ age       : num  27 27 27 27 27 27 27 27 27 27 ...
+##  $ sex       : Factor w/ 2 levels &quot;female&quot;,&quot;male&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ spain     : Factor w/ 1 level &quot;Si&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ spanish   : Factor w/ 2 levels &quot;No&quot;,&quot;Si&quot;: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ consent   : Factor w/ 1 level &quot;yes&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  - attr(*, &quot;na.action&quot;)= &#39;omit&#39; Named int  8 11 14 17 20 23 26 29 32 35 ...
+##   ..- attr(*, &quot;names&quot;)= chr  &quot;8&quot; &quot;11&quot; &quot;14&quot; &quot;17&quot; ...</code></pre>
+<p>When creating the HTML file, I coded some of the answers in Spanish:</p>
+<pre class="r"><code>levels(dat$spain)</code></pre>
+<pre><code>## [1] &quot;Si&quot;</code></pre>
+<pre class="r"><code>levels(dat$spanish)</code></pre>
+<pre><code>## [1] &quot;No&quot; &quot;Si&quot;</code></pre>
+<p>This is not a problem for us. However, I’m gonna translate them into English in case we want to share our data:</p>
+<pre class="r"><code>dat$spain &lt;- as.factor(ifelse(dat$spain==&quot;Si&quot;,&quot;yes&quot;,&quot;no&quot;))
+dat$spanish &lt;- as.factor(ifelse(dat$spanish==&quot;Si&quot;,&quot;yes&quot;,&quot;no&quot;))
+
+levels(dat$spain)</code></pre>
+<pre><code>## [1] &quot;yes&quot;</code></pre>
+<pre class="r"><code>levels(dat$spanish)</code></pre>
+<pre><code>## [1] &quot;no&quot;  &quot;yes&quot;</code></pre>
+<p>We can know delete the rows we are not interested in. We are goin to delete the rows containing:</p>
+<ul>
+<li>the participants’ information (age, gender, etc.) because we already have coded that information in columns.</li>
+<li>the ratings of the practice items because they are uninformative.</li>
+<li>the second row of each response. IbexFarm provides two rows of information per response, but we are only interested in the one containing the rating.</li>
+</ul>
+<pre class="r"><code>dat &lt;- droplevels(subset(dat, type != &quot;intro&quot; &amp; type != &quot;practice&quot; &amp;
+                           sentence == &quot;NULL&quot;))</code></pre>
+<p>We are going to add a new column naming our participants (S<sub>1</sub>, S<sub>2</sub> … S<sub>n</sub>):</p>
+<pre class="r"><code>subj &lt;- length(levels(as.factor(dat$subj_ID)))
+resp &lt;- count(dat$subj_ID)[1,2]
+
+dat$subject &lt;- as.factor(paste(&quot;S&quot;, rep(1:subj, each=resp), sep=&quot;&quot;))</code></pre>
+<p>As a sanity check, we can make sure each subject has only one response per item.If we have more than one response per item or non, we should try to find out why.</p>
+<pre class="r"><code>xtabs(~ subject + item, dat)</code></pre>
+<pre><code>##        item
+## subject  1 10 11 12 13 14 15 16 17 18 19  2 20 21 22 23 24  3  4  5  6  7
+##     S1   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S10  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S11  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S12  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S13  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S14  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S15  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S16  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S17  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S18  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S19  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S2   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S20  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S21  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S22  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S23  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S24  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S25  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S26  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S27  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S28  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S29  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S3   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S30  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S31  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S32  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S33  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S34  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S35  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S36  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S37  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S38  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S39  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S4   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S5   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S6   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S7   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S8   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##     S9   1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+##        item
+## subject  8  9 NULL
+##     S1   1  1   72
+##     S10  1  1   72
+##     S11  1  1   72
+##     S12  1  1   72
+##     S13  1  1   72
+##     S14  1  1   72
+##     S15  1  1   72
+##     S16  1  1   72
+##     S17  1  1   72
+##     S18  1  1   72
+##     S19  1  1   72
+##     S2   1  1   72
+##     S20  1  1   72
+##     S21  1  1   72
+##     S22  1  1   72
+##     S23  1  1   72
+##     S24  1  1   72
+##     S25  1  1   72
+##     S26  1  1   72
+##     S27  1  1   72
+##     S28  1  1   72
+##     S29  1  1   72
+##     S3   1  1   72
+##     S30  1  1   72
+##     S31  1  1   72
+##     S32  1  1   72
+##     S33  1  1   72
+##     S34  1  1   72
+##     S35  1  1   72
+##     S36  1  1   72
+##     S37  1  1   72
+##     S38  1  1   72
+##     S39  1  1   72
+##     S4   1  1   72
+##     S5   1  1   72
+##     S6   1  1   72
+##     S7   1  1   72
+##     S8   1  1   72
+##     S9   1  1   72</code></pre>
+<p>If we have a look at our data frame using the <code>head</code> function, there is a variable called “type” in which we have the conditions specified: filler_gram, filler_ungram, wh_long, wh_short, local_long, local_short.</p>
+<pre class="r"><code>head(dat)</code></pre>
+<pre><code>##       subj_ID                              MD5            controller
+## 25 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 28 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 31 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 34 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 37 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 40 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+##    item_abs element          type item sentence rating age    sex spain
+## 25      117       0   filler_gram NULL     NULL      7  27 female   yes
+## 28      136       0 filler_ungram NULL     NULL      3  27 female   yes
+## 31       82       0      wh_short    4     NULL      5  27 female   yes
+## 34      105       0   filler_gram NULL     NULL      7  27 female   yes
+## 37      164       0 filler_ungram NULL     NULL      4  27 female   yes
+## 40      156       0 filler_ungram NULL     NULL      3  27 female   yes
+##    spanish consent subject
+## 25     yes     yes      S1
+## 28     yes     yes      S1
+## 31     yes     yes      S1
+## 34     yes     yes      S1
+## 37     yes     yes      S1
+## 40     yes     yes      S1</code></pre>
+<p>We need to code this information into three new columns. First, we are going to add a column specifying whether a particular item is a filler or an experimental sentence. This way, we can subset our data frame and analyze either filler or experimental items.</p>
+<pre class="r"><code>dat$exp &lt;- as.factor(ifelse(dat$type==&quot;filler_gram&quot;, &quot;filler&quot;,
+                     ifelse(dat$type==&quot;filler_ungram&quot;, &quot;filler&quot;,
+                            &quot;exp&quot;)))</code></pre>
+<p>Then, we are going to add two columns to code our two factors: “dependency” (wh vs. local) and “length” (short vs. long):</p>
+<pre class="r"><code>dat$dependency &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;wh&quot;,
+                            ifelse(dat$type==&quot;wh_long&quot;, &quot;wh&quot;,
+                            ifelse(dat$type==&quot;local_short&quot;,&quot;local&quot;,
+                            ifelse(dat$type==&quot;local_long&quot;,&quot;local&quot;,
+                            NA)))))
+
+dat$length &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;short&quot;,
+                            ifelse(dat$type==&quot;wh_long&quot;, &quot;long&quot;,
+                            ifelse(dat$type==&quot;local_short&quot;,&quot;short&quot;,
+                            ifelse(dat$type==&quot;local_long&quot;,&quot;long&quot;,
+                            NA)))))</code></pre>
+<pre class="r"><code>dat$trial &lt;- as.factor(seq(1,resp))</code></pre>
+</div>
+<div id="calculate-z-scores-by-subject-and-store-the-results-in-a-new-column" class="section level1">
+<h1>Calculate z-scores by subject and store the results in a new column</h1>
+<pre class="r"><code>dat$z.score.rating &lt;- ave(as.numeric(dat$rating), dat$subject, FUN=scale)
+
+dat$rating &lt;- as.numeric(dat$rating)
+hist(as.numeric(dat$rating))</code></pre>
+<p><img src="cleaning_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<pre class="r"><code>hist(dat$z.score.rating)</code></pre>
+<p><img src="cleaning_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
+<pre class="r"><code>dat_exp &lt;- droplevels(subset(dat, exp == &quot;exp&quot;))
+hist(as.numeric(dat_exp$rating))</code></pre>
+<p><img src="cleaning_files/figure-html/unnamed-chunk-18-3.png" width="672" /></p>
+<pre class="r"><code>hist(dat_exp$z.score.rating)</code></pre>
+<p><img src="cleaning_files/figure-html/unnamed-chunk-18-4.png" width="672" /></p>
+<pre class="r"><code>model1 &lt;- lmer(rating ~ dependency + length + (1|subject) + (1|item), data=dat)
+model2 &lt;- lmer(z.score.rating ~ dependency + length + (1|subject) + (1|item), data=dat)
+
+qqPlot(residuals(model1))</code></pre>
+<p><img src="cleaning_files/figure-html/unnamed-chunk-18-5.png" width="672" /></p>
+<pre><code>## 1479 4353 
+##  114  336</code></pre>
+<pre class="r"><code>qqPlot(residuals(model2))</code></pre>
+<p><img src="cleaning_files/figure-html/unnamed-chunk-18-6.png" width="672" /></p>
+<pre><code>## 6562 2331 
+##  505  179</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

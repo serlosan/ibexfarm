@@ -1,0 +1,10 @@
+name: "ibexfarm"
+output_dir: "docs"
+navbar:
+  title: "IbexFarm Tutorial"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Cleaning data"
+      href: cleaning.html
+  theme: cosmo
