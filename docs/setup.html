@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -261,6 +264,92 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -268,6 +357,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -291,7 +390,7 @@ $(document).ready(function () {
   <a href="setup.html">Setting up the experiment</a>
 </li>
 <li>
-  <a href="cleaning.html">Cleaning data</a>
+  <a href="cleaning.html">Cleaning the data</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -313,8 +412,10 @@ $(document).ready(function () {
 </div>
 
 
+<div id="getting-started" class="section level2">
+<h2>Getting started</h2>
 <p>When we access IbexFarm for the first time, we need to create a new experiment and come up with a name for it. Note that the name we choose is the name participants will see in the URL, so choose a name that does not give away too much information.</p>
-<p><img src="img/setup01.png" /></p>
+<p><img src="img/setup01.png" style="width:50.0%" /></p>
 <p>Within our experiment, there are many files grouped in different sections:</p>
 <ul>
 <li><strong>chunk_includes</strong>: Includes the HTML file participants see when they open the experiment’s link. Here we also include some questions to gather data from our participants (age, native language, etc.).</li>
@@ -325,8 +426,9 @@ $(document).ready(function () {
 <li><strong>server_state</strong>: Counter.</li>
 </ul>
 <p>The files we must modify are included in <strong>chunk_includes</strong> (example_intro.html) and <strong>data_includes</strong> (example_data.js). These files are HTML and JavaScript, respectively. Even though IbexFarm includes an online editor, I recommend using a third part editor because IbexFarm does not support UTF-8, i.e. special characters like accents, <em>ñ</em>, or initial question marks (<em>¿</em>) will not be displayed. Please install <a href="https://www.sublimetext.com/3">Sublime Text 3</a>.</p>
-<div id="intro-file-example_intro.html" class="section level2">
-<h2>Intro file (example_intro.html)</h2>
+</div>
+<div id="intro-file" class="section level2">
+<h2>Intro file</h2>
 <p>The intro file is the first thing participants see when they access the experiment. We should include:</p>
 <ul>
 <li>A welcome message.</li>
@@ -334,8 +436,8 @@ $(document).ready(function () {
 <li>Questions to gather information about participants.</li>
 <li>Thank you message.</li>
 </ul>
-<p>The intro file is an HTML file, so basic HTML coding is required. If you have never coded in HTML before, don’t panic -you’ll only need very basic commands and Google is always willing to help.</p>
-<p>Open Sublime Text 3.0 and open a new file (File &gt; New File). Name it “example_intro.html” and save it in your computer.</p>
+<p>The intro file is an HTML file, so basic HTML coding is required. If you have never coded in HTML before, don’t panic -you’ll only need very basic commands and Google is always willing to help!</p>
+<p>Open Sublime Text 3.0 and open a new file (File &gt; New File). Name it “example_intro.html” and save it to your computer.</p>
 <p><img src="img/setup02.png" /></p>
 <p>In HTML, paragraphs are inserted between <code>&lt;p&gt; &lt;/p&gt;</code>. For instance:</p>
 <pre><code>&lt;p&gt;Thank you for taking part in our experiment!&lt;/p&gt;</code></pre>
@@ -355,9 +457,14 @@ No
 <p>The result will be:</p>
 <p><img src="img/setup04.png" style="width:30.0%" /></p>
 </div>
+<div id="data-file" class="section level2">
+<h2>Data file</h2>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 

@@ -7,7 +7,7 @@ navbar:
       href: index.html
     - text: "Setting up the experiment"
       href: setup.html
-    - text: "Cleaning data"
+    - text: "Cleaning the data"
       href: cleaning.html
 output:
   html_document:

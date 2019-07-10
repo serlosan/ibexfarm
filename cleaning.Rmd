@@ -4,9 +4,13 @@ author: |
   | Sergio López-Sancio
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
 date: "July 18, 2019"
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
-# 1. Before we start
+## Getting started
 
 We need to load the following packages. If you don't have them installed in your computer, you can do so using the `install.packages()` function.
 
@@ -30,6 +34,8 @@ dat <- read.table("data/results.txt", head=FALSE, sep=",", fill=TRUE)
 write.csv(dat,"data/results.csv", row.names=FALSE)
 ```
 
+## Renaming variables
+
 Write now, our columns don't have names.
 
 ```{r}
@@ -49,6 +55,8 @@ We also need to get rid of all rows containing `NAs`:
 ```{r}
 dat <- na.omit(dat)
 ```
+
+## Adding participants' information
 
 In our intro HTML document, we may have added some questionnaires to gather information about our participants (age, gender, native language, etc.). We need to have that information in columns in our data frame. However, IbexFarm provides that information at the beginning of each participant. We can easily extract the information into a vector and paste it in our data frame. Instead of doing this individually for each item in our questionnaire, we can create a function to do so more automatically. I've named it `addcolumn`.
 
@@ -156,7 +164,7 @@ dat$length <- as.factor(ifelse(dat$type=="wh_short", "short",
 dat$trial <- as.factor(seq(1,resp))
 ```
 
-# Calculate z-scores by subject and store the results in a new column
+Calculate z-scores by subject and store the results in a new column
 
 ```{r}
 dat$z.score.rating <- ave(as.numeric(dat$rating), dat$subject, FUN=scale)

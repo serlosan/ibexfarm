@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -261,6 +264,92 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -268,6 +357,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -291,7 +390,7 @@ $(document).ready(function () {
   <a href="setup.html">Setting up the experiment</a>
 </li>
 <li>
-  <a href="cleaning.html">Cleaning data</a>
+  <a href="cleaning.html">Cleaning the data</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -313,8 +412,8 @@ $(document).ready(function () {
 </div>
 
 
-<div id="before-we-start" class="section level1">
-<h1>1. Before we start</h1>
+<div id="getting-started" class="section level2">
+<h2>Getting started</h2>
 <p>We need to load the following packages. If you don’t have them installed in your computer, you can do so using the <code>install.packages()</code> function.</p>
 <pre class="r"><code>library(languageR)
 library(gdata)
@@ -330,6 +429,9 @@ library(car)</code></pre>
 </ul>
 <pre class="r"><code>dat &lt;- read.table(&quot;data/results.txt&quot;, head=FALSE, sep=&quot;,&quot;, fill=TRUE)
 write.csv(dat,&quot;data/results.csv&quot;, row.names=FALSE)</code></pre>
+</div>
+<div id="renaming-variables" class="section level2">
+<h2>Renaming variables</h2>
 <p>Write now, our columns don’t have names.</p>
 <pre class="r"><code>colnames(dat)</code></pre>
 <pre><code>## [1] &quot;V1&quot; &quot;V2&quot; &quot;V3&quot; &quot;V4&quot; &quot;V5&quot; &quot;V6&quot; &quot;V7&quot; &quot;V8&quot; &quot;V9&quot;</code></pre>
@@ -341,6 +443,9 @@ colnames(dat)</code></pre>
 ## [6] &quot;type&quot;       &quot;item&quot;       &quot;sentence&quot;   &quot;rating&quot;</code></pre>
 <p>We also need to get rid of all rows containing <code>NAs</code>:</p>
 <pre class="r"><code>dat &lt;- na.omit(dat)</code></pre>
+</div>
+<div id="adding-participants-information" class="section level2">
+<h2>Adding participants’ information</h2>
 <p>In our intro HTML document, we may have added some questionnaires to gather information about our participants (age, gender, native language, etc.). We need to have that information in columns in our data frame. However, IbexFarm provides that information at the beginning of each participant. We can easily extract the information into a vector and paste it in our data frame. Instead of doing this individually for each item in our questionnaire, we can create a function to do so more automatically. I’ve named it <code>addcolumn</code>.</p>
 <pre class="r"><code>addcolumn &lt;- function(fieldname) {
   repnumber&lt;-count(dat, vars=&quot;subj_ID&quot;)[2,2]
@@ -524,9 +629,7 @@ dat$length &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;short&qu
                             ifelse(dat$type==&quot;local_long&quot;,&quot;long&quot;,
                             NA)))))</code></pre>
 <pre class="r"><code>dat$trial &lt;- as.factor(seq(1,resp))</code></pre>
-</div>
-<div id="calculate-z-scores-by-subject-and-store-the-results-in-a-new-column" class="section level1">
-<h1>Calculate z-scores by subject and store the results in a new column</h1>
+<p>Calculate z-scores by subject and store the results in a new column</p>
 <pre class="r"><code>dat$z.score.rating &lt;- ave(as.numeric(dat$rating), dat$subject, FUN=scale)
 
 dat$rating &lt;- as.numeric(dat$rating)
@@ -554,6 +657,8 @@ qqPlot(residuals(model1))</code></pre>
 
 
 
+</div>
+</div>
 
 </div>
 
