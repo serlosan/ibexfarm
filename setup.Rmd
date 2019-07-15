@@ -328,6 +328,8 @@ var items = [
 
 Now that we have the HTML and the JavaScript files we need, we have to upload them to our experiment in IbexFarm. Go to your experiment and find the "example_intro.html" file. Click on "Upload new version" and select the HTML you have created. Do the same with the "example_data.js" file.
 
+![](img/setup07.png){ width=60% }
+
 Your experiment is ready! Click on the link at the top of the page, which has the following format: http://spellout.net/ibexexps/USER_NAME/EXPERIMENT_NAME/experiment.html. You should now see the HTML intro file. If you get an error message, check your JavaScript file for missing commas, semicolons and brackets (or save time and use an <a href="https://esprima.org/demo/validate.html" target="_blank">online syntax validator</a> to know where the error is!). 
 
 
