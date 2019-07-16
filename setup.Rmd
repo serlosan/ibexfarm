@@ -78,6 +78,54 @@ The result will be:
 
 ![](img/setup04.png){ width=30% }
 
+An example of a complete HTML file would be the following (click <a href="" target="_blank">here</a> to download the HTML file):
+
+```
+<div style="width: 40em;">
+<font face="Arial"><p>A continuación, verás una serie de oraciones que tendrás que puntuar dependiendo de cómo de aceptables te parezcan. Para ello, tendrás que utilizar una escala de 1 (nada aceptable) a 7 (totalmente aceptable)</p>
+
+<p>Una oración es totalmente aceptable cuando al oírla la puedes entender con facilidad y te suena natural, es decir, un hablante nativo la podría utilizar en una conversación. Una oración es totalmente inaceptable cuando no tiene sentido y/o no te suena natural, es decir, un hablante nativo nunca diría algo así. Por lo tanto, no pienses en las reglas gramaticales que hayas podido aprender en el colegio o instituto, guíate por tus intuiciones.</p>
+
+<p>Antes de comenzar con el experimento, contesta por favor a las siguientes preguntas:</p>
+
+
+<strong>1. ¿Has nacido y te has criado en España?</strong></br>
+    Sí
+    <input name="spain" type="radio" class="obligatory" value="yes"/>
+    No
+    <input name="spain" type="radio" class="obligatory" value="no"/>
+
+</br>
+</br>
+
+<strong>2. ¿Tu familia habla siempre español en casa?</strong></br>
+    Sí
+    <input name="spanish" type="radio" class="obligatory" value="yes" />
+    No
+    <input name="spanish" type="radio" class="obligatory" value="no"/>
+
+</br>
+</br>
+
+<strong>3. Edad:</strong>
+    <input name="age" type="text" size="2" class="obligatory"/>
+
+</br>
+</br>   
+
+<strong>4. Sexo:</strong>
+    <input name="sex" type="radio" value="male" class="obligatory"/>Hombre
+    <input name="sex" type="radio" value="female" class="obligatory"/>Mujer
+    <input name="sex" type="radio" value="nonbinary" class="obligatory"/>No binario
+
+</br>
+</br> 
+
+<input type="checkbox" class="obligatory" name="consent"/> Acepto participar en el experimento
+
+</font>
+```
+
 ## Data file
 
 The file containing the experimental and filler sentences is "example_data.js". Note that this is JavaScript file. However, an example is provided when we create a new experiment in IbexFarm, so only minimal adjustments are needed, i.e. it's not really necessary to know JavaScript.
