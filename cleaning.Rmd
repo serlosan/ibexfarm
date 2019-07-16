@@ -2,6 +2,7 @@
 title: "Cleaning IbexFarm output with R"
 author: | 
   | Sergio López-Sancio
+  | *University of the Basque Country (UPV/EHU)*
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
 date: "July, 2019"
 output:
@@ -9,6 +10,10 @@ output:
     toc: true
     toc_float: true
 ---
+
+In this section we will clean the data from an acceptability judgment task in Spanish run with IbexFarm. You can download the data <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/results.txt" target="_blank">here</a>. This file contains data from 39 participants and there were 24 experimental items and 48 filler items. The experimental items follow a 2x2 factorial design: "dependency" (wh vs. local) and "length" (short vs. long).
+
+Note that the purpose of this tutorial is *not* to analyze the data. I will focus on what the output file looks like and what it should look like to be analyzed. I will explain all the steps that need to be followed in R.
 
 ## Getting started
 
@@ -217,18 +222,77 @@ Now we have all the information we need in our data frame, but it looks kind of 
 head(dat)
 ```
 
+First, we our going to transform all the `NULL`cells into `NAs`:
 
 
 ```{r}
 dat[dat == "NULL"] = NA
 ```
 
-
+Then, we are going to get rid of the columns we don't need anymore:
 
 ```{r}
 dat <- droplevels(subset(dat, select=-c(subj_ID, MD5, item_abs, 
                                          element, controller, sentence)))
 ```
 
+We are going to change the order of columns to make it clearer:
 
+```{r}
+colnames(dat)
+dat <- dat[, c(9, 4, 5, 6, 7, 8, 1, 13, 10, 2, 11, 12, 3, 14)]
+colnames(dat)
+```
 
+And that's it! Our data frame is ready to be analyzed. We can have a look at the first rows to see what it looks like:
+
+```{r}
+head(dat)
+```
+
+We can also save it as .csv file in case we want to share it with other researchers or upload it to an online repository:
+
+```{r}
+write.csv(dat,"data/results_clean.csv", row.names=FALSE)
+```
+
+## Participants' information
+
+Now that we have our data frame, we can have a look at the participants' information. We can calculate the mean age, standard deviation and age range:
+
+```{r}
+round(mean(dat$age),2)
+round(sd(dat$age),2)
+range(dat$age)
+```
+
+We can also classify participants depending on gender:
+
+```{r}
+gender<-subset(dat, dat$item=="1")
+xtabs(~ sex, gender)
+```
+
+We can now check whether they are native speakers. First, we subset those who meet the two criteria we set in our HTML form:
+
+```{r}
+datsub <- droplevels(subset(dat, spanish=="yes" & spain=="yes"))
+```
+
+This is the total number of participants:
+
+```{r}
+nlevels(dat$subject)
+```
+
+And the total number of participants who are native speakers accoridng to our criteria:
+
+```{r}
+nlevels(datsub$subject)
+```
+
+This is the difference, i.e. participants that are not native speakers and will therefore be removed from the analysis:
+
+```{r}
+nlevels(dat$subject)-nlevels(datsub$subject)
+```

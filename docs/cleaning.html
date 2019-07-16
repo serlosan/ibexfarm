@@ -10,7 +10,6 @@
 
 
 
-<meta name="date" content="2019-07-18" />
 
 <title>Cleaning IbexFarm output with R</title>
 
@@ -406,12 +405,15 @@ div.tocify {
 
 <h1 class="title toc-ignore">Cleaning IbexFarm output with R</h1>
 <h4 class="author"><div class="line-block">Sergio López-Sancio<br />
+<em>University of the Basque Country (UPV/EHU)</em><br />
 <a href="mailto:sergiolopezsancio@gmail.com">sergiolopezsancio@gmail.com</a></div></h4>
-<h4 class="date">July 18, 2019</h4>
+<h4 class="date">July, 2019</h4>
 
 </div>
 
 
+<p>In this section we will clean the data from an acceptability judgment task in Spanish run with IbexFarm. You can download the data <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/results.txt" target="_blank">here</a>. This file contains data from 39 participants and there were 24 experimental items and 48 filler items. The experimental items follow a 2x2 factorial design: “dependency” (wh vs. local) and “length” (short vs. long).</p>
+<p>Note that the purpose of this tutorial is <em>not</em> to analyze the data. I will focus on what the output file looks like and what it should look like to be analyzed. I will explain all the steps that need to be followed in R.</p>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
 <p>We need to load the following packages. If you don’t have them installed in your computer, you can do so using the <code>install.packages()</code> function.</p>
@@ -664,10 +666,69 @@ dat$length &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;short&qu
 ## 34     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     4     1.52216717
 ## 37     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     5     0.05599946
 ## 40     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     6    -0.43272311</code></pre>
+<p>First, we our going to transform all the <code>NULL</code>cells into <code>NAs</code>:</p>
 <pre class="r"><code>dat[dat == &quot;NULL&quot;] = NA</code></pre>
+<p>Then, we are going to get rid of the columns we don’t need anymore:</p>
 <pre class="r"><code>dat &lt;- droplevels(subset(dat, select=-c(subj_ID, MD5, item_abs, 
                                          element, controller, sentence)))</code></pre>
+<p>We are going to change the order of columns to make it clearer:</p>
+<pre class="r"><code>colnames(dat)</code></pre>
+<pre><code>##  [1] &quot;type&quot;           &quot;item&quot;           &quot;rating&quot;         &quot;age&quot;           
+##  [5] &quot;sex&quot;            &quot;spain&quot;          &quot;spanish&quot;        &quot;consent&quot;       
+##  [9] &quot;subject&quot;        &quot;exp&quot;            &quot;dependency&quot;     &quot;length&quot;        
+## [13] &quot;trial&quot;          &quot;z.score.rating&quot;</code></pre>
+<pre class="r"><code>dat &lt;- dat[, c(9, 4, 5, 6, 7, 8, 1, 13, 10, 2, 11, 12, 3, 14)]
+colnames(dat)</code></pre>
+<pre><code>##  [1] &quot;subject&quot;        &quot;age&quot;            &quot;sex&quot;            &quot;spain&quot;         
+##  [5] &quot;spanish&quot;        &quot;consent&quot;        &quot;type&quot;           &quot;trial&quot;         
+##  [9] &quot;exp&quot;            &quot;item&quot;           &quot;dependency&quot;     &quot;length&quot;        
+## [13] &quot;rating&quot;         &quot;z.score.rating&quot;</code></pre>
+<p>And that’s it! Our data frame is ready to be analyzed. We can have a look at the first rows to see what it looks like:</p>
+<pre class="r"><code>head(dat)</code></pre>
+<pre><code>##    subject age    sex spain spanish consent          type trial    exp
+## 25      S1  27 female   yes     yes     yes   filler_gram     1 filler
+## 28      S1  27 female   yes     yes     yes filler_ungram     2 filler
+## 31      S1  27 female   yes     yes     yes      wh_short     3    exp
+## 34      S1  27 female   yes     yes     yes   filler_gram     4 filler
+## 37      S1  27 female   yes     yes     yes filler_ungram     5 filler
+## 40      S1  27 female   yes     yes     yes filler_ungram     6 filler
+##    item dependency length rating z.score.rating
+## 25 &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;      7     1.52216717
+## 28 &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;      3    -0.43272311
+## 31    4         wh  short      5     0.54472203
+## 34 &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;      7     1.52216717
+## 37 &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;      4     0.05599946
+## 40 &lt;NA&gt;       &lt;NA&gt;   &lt;NA&gt;      3    -0.43272311</code></pre>
+<p>We can also save it as .csv file in case we want to share it with other researchers or upload it to an online repository:</p>
+<pre class="r"><code>write.csv(dat,&quot;data/results_clean.csv&quot;, row.names=FALSE)</code></pre>
 </div>
+</div>
+<div id="participants-information" class="section level2">
+<h2>Participants’ information</h2>
+<p>Now that we have our data frame, we can have a look at the participants’ information. We can calculate the mean age, standard deviation and age range:</p>
+<pre class="r"><code>round(mean(dat$age),2)</code></pre>
+<pre><code>## [1] 32.64</code></pre>
+<pre class="r"><code>round(sd(dat$age),2)</code></pre>
+<pre><code>## [1] 9.92</code></pre>
+<pre class="r"><code>range(dat$age)</code></pre>
+<pre><code>## [1] 19 60</code></pre>
+<p>We can also classify participants depending on gender:</p>
+<pre class="r"><code>gender&lt;-subset(dat, dat$item==&quot;1&quot;)
+xtabs(~ sex, gender)</code></pre>
+<pre><code>## sex
+## female   male 
+##     27     12</code></pre>
+<p>We can now check whether they are native speakers. First, we subset those who meet the two criteria we set in our HTML form:</p>
+<pre class="r"><code>datsub &lt;- droplevels(subset(dat, spanish==&quot;yes&quot; &amp; spain==&quot;yes&quot;))</code></pre>
+<p>This is the total number of participants:</p>
+<pre class="r"><code>nlevels(dat$subject)</code></pre>
+<pre><code>## [1] 39</code></pre>
+<p>And the total number of participants who are native speakers accoridng to our criteria:</p>
+<pre class="r"><code>nlevels(datsub$subject)</code></pre>
+<pre><code>## [1] 36</code></pre>
+<p>This is the difference, i.e. participants that are not native speakers and will therefore be removed from the analysis:</p>
+<pre class="r"><code>nlevels(dat$subject)-nlevels(datsub$subject)</code></pre>
+<pre><code>## [1] 3</code></pre>
 </div>
 
 

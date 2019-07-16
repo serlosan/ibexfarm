@@ -2,10 +2,21 @@
 title: "IbexFarm Tutorial"
 author: | 
   | Sergio López-Sancio
+  | *University of the Basque Country (UPV/EHU)*
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
 date: "July, 2019"
 ---
 
-This is a little tutorial on how to set up your own acceptability judgment task using IbexFarm and how to clean your results in R in order to analyze them.
+Welcome! This tutorial is intended for linguists who would like to run online experiments and are struggling with it. I will only cover acceptability judgment tasks, i.e. questionnaires in which partipants are asked to rate sentences using a 5- or 7-point Likert scale.
 
-For this tutorial, we will use the results from an AJT I conducted as a norming study. You can download the data <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/results.txt" target="_blank">here</a>. There are 24 experimental items in a 2x2 design, crossing "dependency" (wh vs. local) and "length" (short vs. long).
+Online experiments are an easy and powerful tool to collect a large amount of data easily. We will be using <a href="http://spellout.net/latest_ibex_manual.pdf" target="_blank">IbexFarm</a>, a website which provides free hosting for ibex experiments. We can run different types of online experiments using IbexFarm, but we will stick to acceptability judgment tasks. in the *Setting up your experiment* tab, you will learn about the files you need to get your experiment running.
+
+A major concern among linguists using IbexFarm for the first time is reading the results file. The results file contains many information and can be overwhelming. However, we can tidy it up in less than a minute with R. In the *Cleaning the data* tab, you will learn what the necessary steps are to clean your results file in order to analyze your data.
+
+Before you start, you'll need to have the following software installed in your computer:
+
+* **R**: <a href="https://www.r-project.org" target="_blank">https://www.r-project.org</a>
+* **RStudio**: <a href="https://www.rstudio.com/products/rstudio/" target="_blank">https://www.rstudio.com/products/rstudio/</a>
+* **Sublime Text 3.0**: <a href="https://www.sublimetext.com/3" target="_blank">https://www.sublimetext.com/3</a>
+
+Any comments or suggestions are welcome!

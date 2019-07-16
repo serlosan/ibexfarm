@@ -2,6 +2,7 @@
 title: "Setting up your experiment"
 author: | 
   | Sergio López-Sancio
+  | *University of the Basque Country (UPV/EHU)*
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
 date: "July, 2019"
 output:
