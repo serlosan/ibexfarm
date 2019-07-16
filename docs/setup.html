@@ -530,7 +530,9 @@ No
 
 ]; //</code></pre>
 <p>With this code, participant 1 will see, for example, the “subj_rel” version of item 1, the “obj_rel” version of item 2, and so on; whereas participant 2 will see the “obj_rel” version of item 1, the “subj_rel” version of item 2, etc.</p>
-<p>Filler items don’t need to be numbered. It’s a good idea to code grammatical and ungrammatical fillers differently so we can then see the ratings participants have given to them as a sanity check. We can also include some practice items at the beginning so participants get used to the task. Our code including practice items and fillers looks as follows:</p>
+<p>Filler items don’t need to be numbered. It’s a good idea to code grammatical and ungrammatical fillers differently so we can then see the ratings participants have given to them as a sanity check. We can also include some practice items at the beginning so participants get used to the task. Since we won’t assign item numbers to our fillers and practice items, their format is the following:</p>
+<pre><code>[&quot;TYPE&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;SENTENCE&quot;}],</code></pre>
+<p>Our code including practice items and fillers looks as follows:</p>
 <pre><code>var items = [
 
 [&quot;intro&quot;, &quot;Form&quot;, {
@@ -542,8 +544,8 @@ No
 
 // Practice
 
-[[&quot;practice&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;La casa de Luis está lejos del centro de la ciudad.&quot;}],
-[[&quot;practice&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;Los vecinos vieron que el cristal de la puerta estaba rota.&quot;}],
+[&quot;practice&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;La casa de Luis está lejos del centro de la ciudad.&quot;}],
+[&quot;practice&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;Los vecinos vieron que el cristal de la puerta estaba rota.&quot;}],
 
 // Subject relatives
 
@@ -561,10 +563,10 @@ No
 
 // Fillers
 
-[[&quot;filler_gram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;La frutera ha preguntado a la clienta si necesita una bolsa de plástico.&quot;}],
-[[&quot;filler_gram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso&quot;}],
-[[&quot;filler_ungram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;El explorador estaba atento por si salías un animal salvaje de la selva.&quot;}],
-[[&quot;filler_ungram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;Denunciaron que la futbolista había sido sancionado de forma injusta en la final.&quot;}],
+[&quot;filler_gram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;La frutera ha preguntado a la clienta si necesita una bolsa de plástico.&quot;}],
+[&quot;filler_gram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso&quot;}],
+[&quot;filler_ungram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;El explorador estaba atento por si salías un animal salvaje de la selva.&quot;}],
+[&quot;filler_ungram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;Denunciaron que la futbolista había sido sancionado de forma injusta en la final.&quot;}],
 
 ]; //</code></pre>
 </div>
@@ -629,8 +631,8 @@ var items = [
 
 // Practice
 
-[[&quot;practice&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;La casa de Luis está lejos del centro de la ciudad.&quot;}],
-[[&quot;practice&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;Los vecinos vieron que el cristal de la puerta estaba rota.&quot;}],
+[&quot;practice&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;La casa de Luis está lejos del centro de la ciudad.&quot;}],
+[&quot;practice&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;Los vecinos vieron que el cristal de la puerta estaba rota.&quot;}],
 
 // Subject relatives
 
@@ -648,10 +650,10 @@ var items = [
 
 // Fillers
 
-[[&quot;filler_gram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;La frutera ha preguntado a la clienta si necesita una bolsa de plástico.&quot;}],
-[[&quot;filler_gram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso&quot;}],
-[[&quot;filler_ungram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;El explorador estaba atento por si salías un animal salvaje de la selva.&quot;}],
-[[&quot;filler_ungram&quot;],&quot;AcceptabilityJudgment&quot;,{s:&quot;Denunciaron que la futbolista había sido sancionado de forma injusta en la final.&quot;}],
+[&quot;filler_gram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;La frutera ha preguntado a la clienta si necesita una bolsa de plástico.&quot;}],
+[&quot;filler_gram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso&quot;}],
+[&quot;filler_ungram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;El explorador estaba atento por si salías un animal salvaje de la selva.&quot;}],
+[&quot;filler_ungram&quot;,&quot;AcceptabilityJudgment&quot;,{s:&quot;Denunciaron que la futbolista había sido sancionado de forma injusta en la final.&quot;}],
 
 ]; //</code></pre>
 </div>

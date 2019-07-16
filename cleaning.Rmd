@@ -3,7 +3,7 @@ title: "Cleaning IbexFarm output with R"
 author: | 
   | Sergio López-Sancio
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
-date: "July 18, 2019"
+date: "July, 2019"
 output:
   html_document:
     toc: true
@@ -15,12 +15,7 @@ output:
 We need to load the following packages. If you don't have them installed in your computer, you can do so using the `install.packages()` function.
 
 ```{r, message=FALSE}
-library(languageR)
-library(gdata)
-library(MASS)
 library(plyr)
-library(lme4)
-library(car)
 ```
 
 Next, we will load our data. In the `read.table()`function, we must specify that:
@@ -34,9 +29,9 @@ dat <- read.table("data/results.txt", head=FALSE, sep=",", fill=TRUE)
 write.csv(dat,"data/results.csv", row.names=FALSE)
 ```
 
-## Renaming variables
+## Cleaning the data
 
-Write now, our columns don't have names.
+Right now our columns don't have names:
 
 ```{r}
 colnames(dat)
@@ -56,7 +51,7 @@ We also need to get rid of all rows containing `NAs`:
 dat <- na.omit(dat)
 ```
 
-## Adding participants' information
+### Adding participants' information
 
 In our intro HTML document, we may have added some questionnaires to gather information about our participants (age, gender, native language, etc.). We need to have that information in columns in our data frame. However, IbexFarm provides that information at the beginning of each participant. We can easily extract the information into a vector and paste it in our data frame. Instead of doing this individually for each item in our questionnaire, we can create a function to do so more automatically. I've named it `addcolumn`.
 
@@ -129,6 +124,8 @@ As a sanity check, we can make sure each subject has only one response per item.
 xtabs(~ subject + item, dat)
 ```
 
+### Add conditions
+
 If we have a look at our data frame using the `head` function, there is a variable called "type" in which we have the conditions specified: filler_gram, filler_ungram, wh_long, wh_short, local_long, local_short.
 
 ```{r}
@@ -164,25 +161,74 @@ dat$length <- as.factor(ifelse(dat$type=="wh_short", "short",
 dat$trial <- as.factor(seq(1,resp))
 ```
 
-Calculate z-scores by subject and store the results in a new column
+### Calculate z-scores
+
+There are different approaches to analyze Likert-scale data. An approach that's been widely used in experimental syntax is fitting a linear mixed model. Our dependent variable is ordinal because we have 7 ordered categories (from 1 to 7) and the distance between categories is unknown. The problem is that we cannot fit a linear mixed model with an ordinal dependent variable. Thus, we need to transform our data into **z-scores**.
+
+The **population z-score** of a measurement *x* is:
+$$z=\frac{x-\mu}{\sigma}$$
+where $\mu$ is the population mean and $\sigma$ is the population standard deviation.
+
+The **sample z-score** of a measurement *x* is:
+
+$$z=\frac{x-\bar{x}}{s}$$
+where $\bar{x}$ is the sample mean and $s$ is the sample standard deviation.
+
+In short, a z-score tells us how many standard deviations a data point is away from the sample mean. For example, a z-score of 1.6 means that particular data point is 1.6 standard deviations above the mean, whereas a z-score of -0.5 means that data point is 0.5 standard deviations below the mean.
+
+When we transform our data into z-scores we are centering our dependent variable around 0. That is, our data now is a continuous variable that follows a normal(ish) distribution with mean 0 and standard deviation 1: $N(0,1)$.
+
+```{r echo=FALSE, eval=FALSE}
+a1 <- sample(x=1:7, size=100, replace=TRUE)
+a2 <- rep("1-7", 100)
+b1 <- sample(x=3:5, size=100, replace=TRUE)
+b2 <- rep("1-3", 100)
+
+a <- as.data.frame(cbind(a1,a2))
+b <- as.data.frame(cbind(b1,b2))
+colnames(a) <- c("rating","participant")
+colnames(b) <- c("rating","participant")
+
+normal <- rbind(a,b)
+str(normal)
+
+normal$z.score.rating <- ave(as.numeric(normal$rating), normal$participant, FUN=scale)
+
+library(ggplot2)
+
+ggplot(normal, aes(x = z.score.rating, fill = participant)) + 
+   geom_histogram(alpha = 0.5, aes(y = ..density..), position = 'identity')
+
+```
+
+In our case, we are going to calculate z-scores by subject. That is, we are going to calculate the mean and standard deviation of each subject, and use these values to calculate z-scores for each subject individually. This approach eliminates individual scale biases easily and makes data more comparable between subjects. To put it in other words, participants behave ideosyncratically. Some participants only use extreme values when rating sentences (1 and 7), others never use extreme values (3, 4, 5), and others use the whole scale. This doesn't mean some participants didn't find any sentence acceptable -some people avoid giving extreme values for no reason. By computing z-scores taking into account each participant's mean and standard deviation, individual ratings can be now compared in the same scale.
+
+Even though this seems complicated, we can easily compute z-scores by subject and store them in a new column called "z.score.rating" with the following code:
 
 ```{r}
 dat$z.score.rating <- ave(as.numeric(dat$rating), dat$subject, FUN=scale)
-
-dat$rating <- as.numeric(dat$rating)
-hist(as.numeric(dat$rating))
-hist(dat$z.score.rating)
-dat_exp <- droplevels(subset(dat, exp == "exp"))
-hist(as.numeric(dat_exp$rating))
-hist(dat_exp$z.score.rating)
-
-model1 <- lmer(rating ~ dependency + length + (1|subject) + (1|item), data=dat)
-model2 <- lmer(z.score.rating ~ dependency + length + (1|subject) + (1|item), data=dat)
-
-qqPlot(residuals(model1))
-qqPlot(residuals(model2))
-
-
-
 ```
+
+### Organizing the data frame
+
+Now we have all the information we need in our data frame, but it looks kind of messy:
+
+```{r}
+head(dat)
+```
+
+
+
+```{r}
+dat[dat == "NULL"] = NA
+```
+
+
+
+```{r}
+dat <- droplevels(subset(dat, select=-c(subj_ID, MD5, item_abs, 
+                                         element, controller, sentence)))
+```
+
+
 

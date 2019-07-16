@@ -415,12 +415,7 @@ div.tocify {
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
 <p>We need to load the following packages. If you don’t have them installed in your computer, you can do so using the <code>install.packages()</code> function.</p>
-<pre class="r"><code>library(languageR)
-library(gdata)
-library(MASS)
-library(plyr)
-library(lme4)
-library(car)</code></pre>
+<pre class="r"><code>library(plyr)</code></pre>
 <p>Next, we will load our data. In the <code>read.table()</code>function, we must specify that:</p>
 <ul>
 <li>there are no headers (<code>head=FALSE</code>),</li>
@@ -430,9 +425,9 @@ library(car)</code></pre>
 <pre class="r"><code>dat &lt;- read.table(&quot;data/results.txt&quot;, head=FALSE, sep=&quot;,&quot;, fill=TRUE)
 write.csv(dat,&quot;data/results.csv&quot;, row.names=FALSE)</code></pre>
 </div>
-<div id="renaming-variables" class="section level2">
-<h2>Renaming variables</h2>
-<p>Write now, our columns don’t have names.</p>
+<div id="cleaning-the-data" class="section level2">
+<h2>Cleaning the data</h2>
+<p>Right now our columns don’t have names:</p>
 <pre class="r"><code>colnames(dat)</code></pre>
 <pre><code>## [1] &quot;V1&quot; &quot;V2&quot; &quot;V3&quot; &quot;V4&quot; &quot;V5&quot; &quot;V6&quot; &quot;V7&quot; &quot;V8&quot; &quot;V9&quot;</code></pre>
 <p>We can rename these columns so that we can work with out data frame more intuitively:</p>
@@ -443,9 +438,8 @@ colnames(dat)</code></pre>
 ## [6] &quot;type&quot;       &quot;item&quot;       &quot;sentence&quot;   &quot;rating&quot;</code></pre>
 <p>We also need to get rid of all rows containing <code>NAs</code>:</p>
 <pre class="r"><code>dat &lt;- na.omit(dat)</code></pre>
-</div>
-<div id="adding-participants-information" class="section level2">
-<h2>Adding participants’ information</h2>
+<div id="adding-participants-information" class="section level3">
+<h3>Adding participants’ information</h3>
 <p>In our intro HTML document, we may have added some questionnaires to gather information about our participants (age, gender, native language, etc.). We need to have that information in columns in our data frame. However, IbexFarm provides that information at the beginning of each participant. We can easily extract the information into a vector and paste it in our data frame. Instead of doing this individually for each item in our questionnaire, we can create a function to do so more automatically. I’ve named it <code>addcolumn</code>.</p>
 <pre class="r"><code>addcolumn &lt;- function(fieldname) {
   repnumber&lt;-count(dat, vars=&quot;subj_ID&quot;)[2,2]
@@ -589,6 +583,9 @@ dat$subject &lt;- as.factor(paste(&quot;S&quot;, rep(1:subj, each=resp), sep=&qu
 ##     S7   1  1   72
 ##     S8   1  1   72
 ##     S9   1  1   72</code></pre>
+</div>
+<div id="add-conditions" class="section level3">
+<h3>Add conditions</h3>
 <p>If we have a look at our data frame using the <code>head</code> function, there is a variable called “type” in which we have the conditions specified: filler_gram, filler_ungram, wh_long, wh_short, local_long, local_short.</p>
 <pre class="r"><code>head(dat)</code></pre>
 <pre><code>##       subj_ID                              MD5            controller
@@ -629,30 +626,48 @@ dat$length &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;short&qu
                             ifelse(dat$type==&quot;local_long&quot;,&quot;long&quot;,
                             NA)))))</code></pre>
 <pre class="r"><code>dat$trial &lt;- as.factor(seq(1,resp))</code></pre>
-<p>Calculate z-scores by subject and store the results in a new column</p>
-<pre class="r"><code>dat$z.score.rating &lt;- ave(as.numeric(dat$rating), dat$subject, FUN=scale)
-
-dat$rating &lt;- as.numeric(dat$rating)
-hist(as.numeric(dat$rating))</code></pre>
-<p><img src="cleaning_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-<pre class="r"><code>hist(dat$z.score.rating)</code></pre>
-<p><img src="cleaning_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
-<pre class="r"><code>dat_exp &lt;- droplevels(subset(dat, exp == &quot;exp&quot;))
-hist(as.numeric(dat_exp$rating))</code></pre>
-<p><img src="cleaning_files/figure-html/unnamed-chunk-18-3.png" width="672" /></p>
-<pre class="r"><code>hist(dat_exp$z.score.rating)</code></pre>
-<p><img src="cleaning_files/figure-html/unnamed-chunk-18-4.png" width="672" /></p>
-<pre class="r"><code>model1 &lt;- lmer(rating ~ dependency + length + (1|subject) + (1|item), data=dat)
-model2 &lt;- lmer(z.score.rating ~ dependency + length + (1|subject) + (1|item), data=dat)
-
-qqPlot(residuals(model1))</code></pre>
-<p><img src="cleaning_files/figure-html/unnamed-chunk-18-5.png" width="672" /></p>
-<pre><code>## 1479 4353 
-##  114  336</code></pre>
-<pre class="r"><code>qqPlot(residuals(model2))</code></pre>
-<p><img src="cleaning_files/figure-html/unnamed-chunk-18-6.png" width="672" /></p>
-<pre><code>## 6562 2331 
-##  505  179</code></pre>
+</div>
+<div id="calculate-z-scores" class="section level3">
+<h3>Calculate z-scores</h3>
+<p>There are different approaches to analyze Likert-scale data. An approach that’s been widely used in experimental syntax is fitting a linear mixed model. Our dependent variable is ordinal because we have 7 ordered categories (from 1 to 7) and the distance between categories is unknown. The problem is that we cannot fit a linear mixed model with an ordinal dependent variable. Thus, we need to transform our data into <strong>z-scores</strong>.</p>
+<p>The <strong>population z-score</strong> of a measurement <em>x</em> is: <span class="math display">\[z=\frac{x-\mu}{\sigma}\]</span> where <span class="math inline">\(\mu\)</span> is the population mean and <span class="math inline">\(\sigma\)</span> is the population standard deviation.</p>
+<p>The <strong>sample z-score</strong> of a measurement <em>x</em> is:</p>
+<p><span class="math display">\[z=\frac{x-\bar{x}}{s}\]</span> where <span class="math inline">\(\bar{x}\)</span> is the sample mean and <span class="math inline">\(s\)</span> is the sample standard deviation.</p>
+<p>In short, a z-score tells us how many standard deviations a data point is away from the sample mean. For example, a z-score of 1.6 means that particular data point is 1.6 standard deviations above the mean, whereas a z-score of -0.5 means that data point is 0.5 standard deviations below the mean.</p>
+<p>When we transform our data into z-scores we are centering our dependent variable around 0. That is, our data now is a continuous variable that follows a normal(ish) distribution with mean 0 and standard deviation 1: <span class="math inline">\(N(0,1)\)</span>.</p>
+<p>In our case, we are going to calculate z-scores by subject. That is, we are going to calculate the mean and standard deviation of each subject, and use these values to calculate z-scores for each subject individually. This approach eliminates individual scale biases easily and makes data more comparable between subjects. To put it in other words, participants behave ideosyncratically. Some participants only use extreme values when rating sentences (1 and 7), others never use extreme values (3, 4, 5), and others use the whole scale. This doesn’t mean some participants didn’t find any sentence acceptable -some people avoid giving extreme values for no reason. By computing z-scores taking into account each participant’s mean and standard deviation, individual ratings can be now compared in the same scale.</p>
+<p>Even though this seems complicated, we can easily compute z-scores by subject and store them in a new column called “z.score.rating” with the following code:</p>
+<pre class="r"><code>dat$z.score.rating &lt;- ave(as.numeric(dat$rating), dat$subject, FUN=scale)</code></pre>
+</div>
+<div id="organizing-the-data-frame" class="section level3">
+<h3>Organizing the data frame</h3>
+<p>Now we have all the information we need in our data frame, but it looks kind of messy:</p>
+<pre class="r"><code>head(dat)</code></pre>
+<pre><code>##       subj_ID                              MD5            controller
+## 25 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 28 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 31 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 34 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 37 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+## 40 1550858942 845661b29bd302686e29263fa1cf016c AcceptabilityJudgment
+##    item_abs element          type item sentence rating age    sex spain
+## 25      117       0   filler_gram NULL     NULL      7  27 female   yes
+## 28      136       0 filler_ungram NULL     NULL      3  27 female   yes
+## 31       82       0      wh_short    4     NULL      5  27 female   yes
+## 34      105       0   filler_gram NULL     NULL      7  27 female   yes
+## 37      164       0 filler_ungram NULL     NULL      4  27 female   yes
+## 40      156       0 filler_ungram NULL     NULL      3  27 female   yes
+##    spanish consent subject    exp dependency length trial z.score.rating
+## 25     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     1     1.52216717
+## 28     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     2    -0.43272311
+## 31     yes     yes      S1    exp         wh  short     3     0.54472203
+## 34     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     4     1.52216717
+## 37     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     5     0.05599946
+## 40     yes     yes      S1 filler       &lt;NA&gt;   &lt;NA&gt;     6    -0.43272311</code></pre>
+<pre class="r"><code>dat[dat == &quot;NULL&quot;] = NA</code></pre>
+<pre class="r"><code>dat &lt;- droplevels(subset(dat, select=-c(subj_ID, MD5, item_abs, 
+                                         element, controller, sentence)))</code></pre>
+</div>
 </div>
 
 

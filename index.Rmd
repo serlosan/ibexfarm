@@ -1,5 +1,8 @@
 ---
 title: "IbexFarm Tutorial"
+  | Sergio López-Sancio
+  | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
+date: "July, 2019"
 ---
 
 This is a little tutorial on how to set up your own acceptability judgment task using IbexFarm and how to clean your results in R in order to analyze them.

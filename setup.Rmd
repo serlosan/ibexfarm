@@ -3,7 +3,7 @@ title: "Setting up your experiment"
 author: | 
   | Sergio López-Sancio
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
-date: "July 17, 2019"
+date: "July, 2019"
 output:
   html_document:
     toc: true
@@ -176,7 +176,13 @@ var items = [
 
 With this code, participant 1 will see, for example, the "subj_rel" version of item 1, the "obj_rel" version of item 2, and so on; whereas participant 2 will see the "obj_rel" version of item 1, the "subj_rel" version of item 2, etc.
 
-Filler items don't need to be numbered. It's a good idea to code grammatical and ungrammatical fillers differently so we can then see the ratings participants have given to them as a sanity check. We can also include some practice items at the beginning so participants get used to the task. Our code including practice items and fillers looks as follows:
+Filler items don't need to be numbered. It's a good idea to code grammatical and ungrammatical fillers differently so we can then see the ratings participants have given to them as a sanity check. We can also include some practice items at the beginning so participants get used to the task. Since we won't assign item numbers to our fillers and practice items, their format is the following:
+
+```
+["TYPE","AcceptabilityJudgment",{s:"SENTENCE"}],
+```
+
+Our code including practice items and fillers looks as follows:
 
 ```
 var items = [
@@ -190,8 +196,8 @@ var items = [
 
 // Practice
 
-[["practice"],"AcceptabilityJudgment",{s:"La casa de Luis está lejos del centro de la ciudad."}],
-[["practice"],"AcceptabilityJudgment",{s:"Los vecinos vieron que el cristal de la puerta estaba rota."}],
+["practice","AcceptabilityJudgment",{s:"La casa de Luis está lejos del centro de la ciudad."}],
+["practice","AcceptabilityJudgment",{s:"Los vecinos vieron que el cristal de la puerta estaba rota."}],
 
 // Subject relatives
 
@@ -209,10 +215,10 @@ var items = [
 
 // Fillers
 
-[["filler_gram"],"AcceptabilityJudgment",{s:"La frutera ha preguntado a la clienta si necesita una bolsa de plástico."}],
-[["filler_gram"],"AcceptabilityJudgment",{s:"Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso"}],
-[["filler_ungram"],"AcceptabilityJudgment",{s:"El explorador estaba atento por si salías un animal salvaje de la selva."}],
-[["filler_ungram"],"AcceptabilityJudgment",{s:"Denunciaron que la futbolista había sido sancionado de forma injusta en la final."}],
+["filler_gram","AcceptabilityJudgment",{s:"La frutera ha preguntado a la clienta si necesita una bolsa de plástico."}],
+["filler_gram","AcceptabilityJudgment",{s:"Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso"}],
+["filler_ungram","AcceptabilityJudgment",{s:"El explorador estaba atento por si salías un animal salvaje de la selva."}],
+["filler_ungram","AcceptabilityJudgment",{s:"Denunciaron que la futbolista había sido sancionado de forma injusta en la final."}],
 
 ]; //
 ```
@@ -297,8 +303,8 @@ var items = [
 
 // Practice
 
-[["practice"],"AcceptabilityJudgment",{s:"La casa de Luis está lejos del centro de la ciudad."}],
-[["practice"],"AcceptabilityJudgment",{s:"Los vecinos vieron que el cristal de la puerta estaba rota."}],
+["practice","AcceptabilityJudgment",{s:"La casa de Luis está lejos del centro de la ciudad."}],
+["practice","AcceptabilityJudgment",{s:"Los vecinos vieron que el cristal de la puerta estaba rota."}],
 
 // Subject relatives
 
@@ -316,10 +322,10 @@ var items = [
 
 // Fillers
 
-[["filler_gram"],"AcceptabilityJudgment",{s:"La frutera ha preguntado a la clienta si necesita una bolsa de plástico."}],
-[["filler_gram"],"AcceptabilityJudgment",{s:"Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso"}],
-[["filler_ungram"],"AcceptabilityJudgment",{s:"El explorador estaba atento por si salías un animal salvaje de la selva."}],
-[["filler_ungram"],"AcceptabilityJudgment",{s:"Denunciaron que la futbolista había sido sancionado de forma injusta en la final."}],
+["filler_gram","AcceptabilityJudgment",{s:"La frutera ha preguntado a la clienta si necesita una bolsa de plástico."}],
+["filler_gram","AcceptabilityJudgment",{s:"Vieron que la abogada había manipulado las pruebas deliberadamente para ganar el caso"}],
+["filler_ungram","AcceptabilityJudgment",{s:"El explorador estaba atento por si salías un animal salvaje de la selva."}],
+["filler_ungram","AcceptabilityJudgment",{s:"Denunciaron que la futbolista había sido sancionado de forma injusta en la final."}],
 
 ]; //
 ```
