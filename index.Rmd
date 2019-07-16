@@ -1,5 +1,6 @@
 ---
 title: "IbexFarm Tutorial"
+author: | 
   | Sergio López-Sancio
   | [sergiolopezsancio@gmail.com](mailto:sergiolopezsancio@gmail.com)
 date: "July, 2019"
