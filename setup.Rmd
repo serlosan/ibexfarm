@@ -11,7 +11,7 @@ output:
     toc_float: true
 ---
 
-This section will cover how to create a simple acceptability judgment task (AJT) with IbexFarm. If you'd like to customize your experiment -or combine different types of experiments, e.g. a self-paced reading and an AJT- read the <a href="http://spellout.net/latest_ibex_manual.pdf" target="_blank">IbexFarm 0.3.8 Manual</a>.
+This section will cover how to create a simple acceptability judgment task (AJT) with IbexFarm. If you'd like to customize your experiment -or combine different types of experiments, e.g. a self-paced reading and an AJT-, read the <a href="http://spellout.net/latest_ibex_manual.pdf" target="_blank">IbexFarm 0.3.8 Manual</a>.
 
 ## Getting started
 
@@ -78,7 +78,7 @@ The result will be:
 
 ![](img/setup04.png){ width=30% }
 
-An example of a complete HTML file would be the following (click <a href="" target="_blank">here</a> to download the HTML file):
+An example of a complete HTML file would be the following (click <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/example_intro.html" target="_blank">here</a> to download the HTML file):
 
 ```
 <div style="width: 40em;">
@@ -187,7 +187,7 @@ Imagine we want to investigate how acceptable subject and object relatives are i
 [["obj_rel",1],"AcceptabilityJudgment",{s:"Conocían al atleta que venció finalmente el corredor el año pasado."}],
 ```
 
-In (psycho)linguistics, we create different versions of a sentence depending on the manipulation(s) we are interested in. This is what we call an *item*. In our example above, we are manipulating the type of relative clause, which can be either subject or object. That is, we have an experimental design with one factor (TYPE OF RELATIVE CLAUSE) with two levels: "subject" or "object" relative. Thus, our first item consists of two sentences which **only** differ in our experimental manipulation, whereas all other features remain the same.
+In (psycho)linguistics, we create different versions of a sentence depending on the manipulation(s) we are interested in. This is what we call an *item*. In our example above, we are manipulating the type of relative clause, which can be either subject or object. That is, we have an experimental design with one factor (TYPE OF RELATIVE CLAUSE) with two levels: "subject" or "object" relative. Thus, our first item consists of two sentences which **only** differ in our experimental manipulation, whereas all other features remain the same (the experimental sentences have been taken from Betancourt, Carreiras & Sturt, 2008).
 
 1. *Subject relative*: Conocían al atleta que venció finalmente <u>al</u> corredor el año pasado.
 1. *Object relative*: Conocían al atleta que venció finalmente <u>el</u> corredor el año pasado.
@@ -315,7 +315,7 @@ We can change the default "Click here to continue" message we see at the bottom 
     }
 ```
 
-This is all we need to get our experiment going. Your final "example_data.js" file should look like this:
+This is all we need to get our experiment going. Your final "example_data.js" file should look like this (click <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/example_data.js" target="_blank">here</a> to download the file):
 
 ```
 var shuffleSequence = seq("intro", randomize("practice"), shuffle(randomize(anyOf("subj_rel","obj_rel")), randomize(anyOf("filler_gram","filler_ungram"))));

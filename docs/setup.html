@@ -412,7 +412,7 @@ div.tocify {
 </div>
 
 
-<p>This section will cover how to create a simple acceptability judgment task (AJT) with IbexFarm. If you’d like to customize your experiment -or combine different types of experiments, e.g. a self-paced reading and an AJT- read the <a href="http://spellout.net/latest_ibex_manual.pdf" target="_blank">IbexFarm 0.3.8 Manual</a>.</p>
+<p>This section will cover how to create a simple acceptability judgment task (AJT) with IbexFarm. If you’d like to customize your experiment -or combine different types of experiments, e.g. a self-paced reading and an AJT-, read the <a href="http://spellout.net/latest_ibex_manual.pdf" target="_blank">IbexFarm 0.3.8 Manual</a>.</p>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
 <p>First, go to <a href="http://spellout.net/ibexfarm/" target="_blank">http://spellout.net/ibexfarm/</a>. When we access IbexFarm for the first time, we need to create a new experiment and come up with a name for it. Note that the name we choose is the name participants will see in the URL, so choose a name that does not give away too much information.</p>
@@ -457,7 +457,7 @@ No
 &lt;input name=&quot;native&quot; type=&quot;radio&quot; class=&quot;obligatory&quot; value=&quot;No&quot;/&gt;</code></pre>
 <p>The result will be:</p>
 <p><img src="img/setup04.png" style="width:30.0%" /></p>
-<p>An example of a complete HTML file would be the following (click <a href="" target="_blank">here</a> to download the HTML file):</p>
+<p>An example of a complete HTML file would be the following (click <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/example_intro.html" target="_blank">here</a> to download the HTML file):</p>
 <pre><code>&lt;div style=&quot;width: 40em;&quot;&gt;
 &lt;font face=&quot;Arial&quot;&gt;&lt;p&gt;A continuación, verás una serie de oraciones que tendrás que puntuar dependiendo de cómo de aceptables te parezcan. Para ello, tendrás que utilizar una escala de 1 (nada aceptable) a 7 (totalmente aceptable)&lt;/p&gt;
 
@@ -542,7 +542,7 @@ No
 <p>Imagine we want to investigate how acceptable subject and object relatives are in Spanish. Our first item would look as follows:</p>
 <pre><code>[[&quot;subj_rel&quot;,1],&quot;AcceptabilityJudgment&quot;,{s:&quot;Conocían al atleta que venció finalmente al corredor el año pasado.&quot;}],
 [[&quot;obj_rel&quot;,1],&quot;AcceptabilityJudgment&quot;,{s:&quot;Conocían al atleta que venció finalmente el corredor el año pasado.&quot;}],</code></pre>
-<p>In (psycho)linguistics, we create different versions of a sentence depending on the manipulation(s) we are interested in. This is what we call an <em>item</em>. In our example above, we are manipulating the type of relative clause, which can be either subject or object. That is, we have an experimental design with one factor (TYPE OF RELATIVE CLAUSE) with two levels: “subject” or “object” relative. Thus, our first item consists of two sentences which <strong>only</strong> differ in our experimental manipulation, whereas all other features remain the same.</p>
+<p>In (psycho)linguistics, we create different versions of a sentence depending on the manipulation(s) we are interested in. This is what we call an <em>item</em>. In our example above, we are manipulating the type of relative clause, which can be either subject or object. That is, we have an experimental design with one factor (TYPE OF RELATIVE CLAUSE) with two levels: “subject” or “object” relative. Thus, our first item consists of two sentences which <strong>only</strong> differ in our experimental manipulation, whereas all other features remain the same (the experimental sentences have been taken from Betancourt, Carreiras &amp; Sturt, 2008).</p>
 <ol style="list-style-type: decimal">
 <li><em>Subject relative</em>: Conocían al atleta que venció finalmente <u>al</u> corredor el año pasado.</li>
 <li><em>Object relative</em>: Conocían al atleta que venció finalmente <u>el</u> corredor el año pasado.</li>
@@ -640,7 +640,7 @@ var pageTitle = &quot;Experimento&quot;;</code></pre>
     saveReactionTime: true,
     continueMessage: &quot;Haz clic aquí para continuar&quot;
     }</code></pre>
-<p>This is all we need to get our experiment going. Your final “example_data.js” file should look like this:</p>
+<p>This is all we need to get our experiment going. Your final “example_data.js” file should look like this (click <a href="https://raw.githubusercontent.com/serlosan/ibexfarm/master/data/example_data.js" target="_blank">here</a> to download the file):</p>
 <pre><code>var shuffleSequence = seq(&quot;intro&quot;, randomize(&quot;practice&quot;), shuffle(randomize(anyOf(&quot;subj_rel&quot;,&quot;obj_rel&quot;)), randomize(anyOf(&quot;filler_gram&quot;,&quot;filler_ungram&quot;))));
 
 var sendingResultsMessage = &quot;Los resultados se están enviando al servidor.&quot;;
