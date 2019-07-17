@@ -216,7 +216,7 @@ var items = [
 // Object relatives
 
 [["obj_rel",1],"AcceptabilityJudgment",{s:"Conocían al atleta que venció finalmente el corredor el año pasado."}],
-[["obj_rel",2],"AcceptabilityJudgment",{s:"Investigaron al testigo que señalaba claramente al asesino durante el juicio."}],
+[["obj_rel",2],"AcceptabilityJudgment",{s:"Investigaron al testigo que señalaba claramente el asesino durante el juicio."}],
 [["obj_rel",3],"AcceptabilityJudgment",{s:"Aplaudieron al actor que llevó ese año el director a los Óscars."}],
 [["obj_rel",4],"AcceptabilityJudgment",{s:"Censuraron el programa que denunció duramente el político a través de la radio."}],
 
@@ -258,7 +258,7 @@ var items = [
 // Object relatives
 
 [["obj_rel",1],"AcceptabilityJudgment",{s:"Conocían al atleta que venció finalmente el corredor el año pasado."}],
-[["obj_rel",2],"AcceptabilityJudgment",{s:"Investigaron al testigo que señalaba claramente al asesino durante el juicio."}],
+[["obj_rel",2],"AcceptabilityJudgment",{s:"Investigaron al testigo que señalaba claramente el asesino durante el juicio."}],
 [["obj_rel",3],"AcceptabilityJudgment",{s:"Aplaudieron al actor que llevó ese año el director a los Óscars."}],
 [["obj_rel",4],"AcceptabilityJudgment",{s:"Censuraron el programa que denunció duramente el político a través de la radio."}],
 
@@ -365,7 +365,7 @@ var items = [
 // Object relatives
 
 [["obj_rel",1],"AcceptabilityJudgment",{s:"Conocían al atleta que venció finalmente el corredor el año pasado."}],
-[["obj_rel",2],"AcceptabilityJudgment",{s:"Investigaron al testigo que señalaba claramente al asesino durante el juicio."}],
+[["obj_rel",2],"AcceptabilityJudgment",{s:"Investigaron al testigo que señalaba claramente el asesino durante el juicio."}],
 [["obj_rel",3],"AcceptabilityJudgment",{s:"Aplaudieron al actor que llevó ese año el director a los Óscars."}],
 [["obj_rel",4],"AcceptabilityJudgment",{s:"Censuraron el programa que denunció duramente el político a través de la radio."}],
 
