@@ -627,6 +627,7 @@ dat$length &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;short&qu
                             ifelse(dat$type==&quot;local_short&quot;,&quot;short&quot;,
                             ifelse(dat$type==&quot;local_long&quot;,&quot;long&quot;,
                             NA)))))</code></pre>
+<p>We can also add a new columns with trial number information:</p>
 <pre class="r"><code>dat$trial &lt;- as.factor(seq(1,resp))</code></pre>
 </div>
 <div id="calculate-z-scores" class="section level3">
