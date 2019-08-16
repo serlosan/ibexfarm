@@ -162,7 +162,7 @@ dat$length <- as.factor(ifelse(dat$type=="wh_short", "short",
                             NA)))))
 ```
 
-We can also add a new columns with trial number information:
+We can also add a new column with trial number information:
 
 ```{r}
 dat$trial <- as.factor(seq(1,resp))
