@@ -181,9 +181,8 @@ The **sample z-score** of a measurement *x* is:
 $$z=\frac{x-\bar{x}}{s}$$
 where $\bar{x}$ is the sample mean and $s$ is the sample standard deviation.
 
-In short, a z-score tells us how many standard deviations a data point is away from the sample mean. For example, a z-score of 1.6 means that particular data point is 1.6 standard deviations above the mean, whereas a z-score of -0.5 means that data point is 0.5 standard deviations below the mean.
+In short, a z-score tells us how many standard deviations a data point deviates from the sample mean. For example, a z-score of 1.6 means that particular data point is 1.6 standard deviations above the mean, whereas a z-score of -0.5 means that data point is 0.5 standard deviations below the mean.
 
-When we transform our data into z-scores we are centering our dependent variable around 0. That is, our data now is a continuous variable that follows a normal(ish) distribution with mean 0 and standard deviation 1: $N(0,1)$.
 
 ```{r echo=FALSE, eval=FALSE}
 a1 <- sample(x=1:7, size=100, replace=TRUE)
@@ -208,7 +207,7 @@ ggplot(normal, aes(x = z.score.rating, fill = participant)) +
 
 ```
 
-In our case, we are going to calculate z-scores by subject. That is, we are going to calculate the mean and standard deviation of each subject, and use these values to calculate z-scores for each subject individually. This approach eliminates individual scale biases easily and makes data more comparable between subjects. To put it in other words, participants behave ideosyncratically. Some participants only use extreme values when rating sentences (1 and 7), others never use extreme values (3, 4, 5), and others use the whole scale. This doesn't mean some participants didn't find any sentence acceptable -some people avoid giving extreme values for no reason. By computing z-scores taking into account each participant's mean and standard deviation, individual ratings can be now compared in the same scale.
+When we transform our data into z-scores our dependent variable is now continuous and centered around 0. In our case, we are going to calculate z-scores by subject. That is, we are going to calculate the mean and standard deviation of each subject, and use these values to calculate z-scores for each subject individually. This approach eliminates individual scale biases and makes data more comparable between subjects. Participants behave ideosyncratically: some participants only use extreme values when rating sentences (1 and 7), others never use extreme values and stick to intermediate ratings (3, 4, 5), and others use the whole scale. By computing z-scores taking into account each participant's mean and standard deviation, individual ratings can now be compared in the same scale.
 
 Even though this seems complicated, we can easily compute z-scores by subject and store them in a new column called "z.score.rating" with the following code:
 
