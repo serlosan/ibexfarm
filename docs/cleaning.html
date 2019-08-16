@@ -627,7 +627,7 @@ dat$length &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;short&qu
                             ifelse(dat$type==&quot;local_short&quot;,&quot;short&quot;,
                             ifelse(dat$type==&quot;local_long&quot;,&quot;long&quot;,
                             NA)))))</code></pre>
-<p>We can also add a new columns with trial number information:</p>
+<p>We can also add a new column with trial number information:</p>
 <pre class="r"><code>dat$trial &lt;- as.factor(seq(1,resp))</code></pre>
 </div>
 <div id="calculate-z-scores" class="section level3">
@@ -636,9 +636,8 @@ dat$length &lt;- as.factor(ifelse(dat$type==&quot;wh_short&quot;, &quot;short&qu
 <p>The <strong>population z-score</strong> of a measurement <em>x</em> is: <span class="math display">\[z=\frac{x-\mu}{\sigma}\]</span> where <span class="math inline">\(\mu\)</span> is the population mean and <span class="math inline">\(\sigma\)</span> is the population standard deviation.</p>
 <p>The <strong>sample z-score</strong> of a measurement <em>x</em> is:</p>
 <p><span class="math display">\[z=\frac{x-\bar{x}}{s}\]</span> where <span class="math inline">\(\bar{x}\)</span> is the sample mean and <span class="math inline">\(s\)</span> is the sample standard deviation.</p>
-<p>In short, a z-score tells us how many standard deviations a data point is away from the sample mean. For example, a z-score of 1.6 means that particular data point is 1.6 standard deviations above the mean, whereas a z-score of -0.5 means that data point is 0.5 standard deviations below the mean.</p>
-<p>When we transform our data into z-scores we are centering our dependent variable around 0. That is, our data now is a continuous variable that follows a normal(ish) distribution with mean 0 and standard deviation 1: <span class="math inline">\(N(0,1)\)</span>.</p>
-<p>In our case, we are going to calculate z-scores by subject. That is, we are going to calculate the mean and standard deviation of each subject, and use these values to calculate z-scores for each subject individually. This approach eliminates individual scale biases easily and makes data more comparable between subjects. To put it in other words, participants behave ideosyncratically. Some participants only use extreme values when rating sentences (1 and 7), others never use extreme values (3, 4, 5), and others use the whole scale. This doesn’t mean some participants didn’t find any sentence acceptable -some people avoid giving extreme values for no reason. By computing z-scores taking into account each participant’s mean and standard deviation, individual ratings can be now compared in the same scale.</p>
+<p>In short, a z-score tells us how many standard deviations a data point deviates from the sample mean. For example, a z-score of 1.6 means that particular data point is 1.6 standard deviations above the mean, whereas a z-score of -0.5 means that data point is 0.5 standard deviations below the mean.</p>
+<p>When we transform our data into z-scores our dependent variable is now continuous and centered around 0. In our case, we are going to calculate z-scores by subject. That is, we are going to calculate the mean and standard deviation of each subject, and use these values to calculate z-scores for each subject individually. This approach eliminates individual scale biases and makes data more comparable between subjects. Participants behave ideosyncratically: some participants only use extreme values when rating sentences (1 and 7), others never use extreme values and stick to intermediate ratings (3, 4, 5), and others use the whole scale. By computing z-scores taking into account each participant’s mean and standard deviation, individual ratings can now be compared in the same scale.</p>
 <p>Even though this seems complicated, we can easily compute z-scores by subject and store them in a new column called “z.score.rating” with the following code:</p>
 <pre class="r"><code>dat$z.score.rating &lt;- ave(as.numeric(dat$rating), dat$subject, FUN=scale)</code></pre>
 </div>
