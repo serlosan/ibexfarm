@@ -103,7 +103,7 @@ levels(dat$spain)
 levels(dat$spanish)
 ```
 
-We can know delete the rows we are not interested in. We are goin to delete the rows containing:
+We can know delete the rows we are not interested in. We are going to delete the rows containing:
 
 * the participants' information (age, gender, etc.) because we already have coded that information in columns.
 * the ratings of the practice items because they are uninformative.
@@ -123,7 +123,7 @@ resp <- count(dat$subj_ID)[1,2]
 dat$subject <- as.factor(paste("S", rep(1:subj, each=resp), sep=""))
 ```
 
-As a sanity check, we can make sure each subject has only one response per item.If we have more than one response per item or non, we should try to find out why.
+As a sanity check, we can make sure each subject has only one response per item. If we have more than one response per item or non, we should try to find out why.
 
 ```{r}
 xtabs(~ subject + item, dat)

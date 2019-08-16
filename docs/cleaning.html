@@ -488,7 +488,7 @@ levels(dat$spain)</code></pre>
 <pre><code>## [1] &quot;yes&quot;</code></pre>
 <pre class="r"><code>levels(dat$spanish)</code></pre>
 <pre><code>## [1] &quot;no&quot;  &quot;yes&quot;</code></pre>
-<p>We can know delete the rows we are not interested in. We are goin to delete the rows containing:</p>
+<p>We can know delete the rows we are not interested in. We are going to delete the rows containing:</p>
 <ul>
 <li>the participants’ information (age, gender, etc.) because we already have coded that information in columns.</li>
 <li>the ratings of the practice items because they are uninformative.</li>
@@ -501,7 +501,7 @@ levels(dat$spain)</code></pre>
 resp &lt;- count(dat$subj_ID)[1,2]
 
 dat$subject &lt;- as.factor(paste(&quot;S&quot;, rep(1:subj, each=resp), sep=&quot;&quot;))</code></pre>
-<p>As a sanity check, we can make sure each subject has only one response per item.If we have more than one response per item or non, we should try to find out why.</p>
+<p>As a sanity check, we can make sure each subject has only one response per item. If we have more than one response per item or non, we should try to find out why.</p>
 <pre class="r"><code>xtabs(~ subject + item, dat)</code></pre>
 <pre><code>##        item
 ## subject  1 10 11 12 13 14 15 16 17 18 19  2 20 21 22 23 24  3  4  5  6  7
